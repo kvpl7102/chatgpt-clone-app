@@ -1,0 +1,44 @@
+import express from "express";
+import { config } from "dotenv";
+import morgan from "morgan";
+import appRouter from "./routes/index.js";
+
+config(); // Load environment variables from .env file
+const app = express();
+
+
+// Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/api/v1", appRouter);
+app.use(morgan("dev")); // Remove this in production
+
+ 
+
+app.get("/", (req, res) => {
+    res.send("Hello, World!");
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export default app;
