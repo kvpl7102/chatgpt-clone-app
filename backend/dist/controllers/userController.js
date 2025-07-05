@@ -1,5 +1,7 @@
 import { hash, compare } from "bcrypt";
 import User from "../models/User.js";
+import { createToken } from "../utils/token-manager.js";
+import { COOKIE_NAME } from "../utils/constants.js";
 export const getAllUsers = async (req, res, next) => {
     try {
         // Get all users from the database
@@ -30,6 +32,25 @@ export const userSignup = async (req, res, next) => {
         // User signup logic
         const user = new User({ name, email, password: await hash(password, 10) });
         await user.save();
+        // Create token and store cookie
+        // Clear the previous cookie 
+        res.clearCookie(COOKIE_NAME, {
+            path: "/",
+            domain: "localhost",
+            httpOnly: true,
+            signed: true,
+        });
+        // Create new token and cookie for user
+        const token = createToken(user._id.toString(), user.email, "7d");
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 7);
+        res.cookie("auth_token", token, {
+            path: "/",
+            domain: "localhost",
+            expires,
+            httpOnly: true,
+            signed: true,
+        });
         return res.status(201).json({
             message: "User signed up successfully!",
             id: user._id.toString()
@@ -59,6 +80,25 @@ export const userLogin = async (req, res, next) => {
                 message: "Incorrect password."
             });
         }
+        ;
+        // Clear the previous cookie 
+        res.clearCookie(COOKIE_NAME, {
+            path: "/",
+            domain: "localhost",
+            httpOnly: true,
+            signed: true,
+        });
+        // Create new token and cookie for user
+        const token = createToken(user._id.toString(), user.email, "7d");
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 7);
+        res.cookie("auth_token", token, {
+            path: "/",
+            domain: "localhost",
+            expires,
+            httpOnly: true,
+            signed: true,
+        });
         return res.status(200).json({
             message: "Logged in successfully! Hello " + user.name,
         });
