@@ -68,7 +68,8 @@ export const userSignup = async (
     
         return res.status(201).json({
             message: "User signed up successfully!", 
-            id: user._id.toString()
+            name: user.name,
+            email: user.email
         });
 
     } catch (error) {
@@ -125,6 +126,8 @@ export const userLogin = async (
 
         return res.status(200).json({
             message: "Logged in successfully! Hello " + user.name, 
+            name: user.name,
+            email: user.email
         });
 
     } catch (error) {
