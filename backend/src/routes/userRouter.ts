@@ -1,6 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { getAllUsers, userLogin, userSignup } from '../controllers/userController.js';
 import { signupValidator, loginValidator, validate } from '../utils/validators.js';
+import { verifyToken } from '../utils/token-manager.js';
+import { verifyUser } from '../controllers/userController.js';
 
 const userRouter = Router();
 
@@ -31,13 +33,19 @@ userRouter.post("/login", validate(loginValidator),
 	userLogin(req, res, next).catch(next);
 });
 
-
-
-
-
-
-
-
-
+userRouter.get("/auth-status",
+	(
+	req: Request, 
+	res: Response, 
+	next: NextFunction
+) => {
+	verifyToken(req, res, next).catch(next);
+}, (
+	req: Request, 
+	res: Response, 
+	next: NextFunction
+) => {
+	verifyUser(req, res, next).catch(next);
+});
 
 export default userRouter;
