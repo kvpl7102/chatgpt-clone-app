@@ -13,8 +13,8 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use("/api/v1", appRouter);
 app.use(morgan("dev")); // Remove this in production
+app.use("/api/v1", appRouter);
 app.get("/", (req, res) => {
     res.send("Hello, World!");
 });

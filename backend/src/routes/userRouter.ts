@@ -39,7 +39,7 @@ userRouter.get("/auth-status",
 	res: Response, 
 	next: NextFunction
 ) => {
-	verifyToken(req, res, next).catch(next);
+	verifyToken(req, res, next);
 }, (
 	req: Request, 
 	res: Response, 

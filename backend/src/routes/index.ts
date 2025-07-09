@@ -6,7 +6,7 @@ const appRouter = Router();
 
 // Middlewares
 appRouter.use("/user", userRouter); //domain.com/api/v1/user
-appRouter.use("/chats",chatRouter); //domain.com/api/v1/chats
+appRouter.use("/chat",chatRouter); //domain.com/api/v1/chat
 
 
 

@@ -1,9 +1,15 @@
 import { Router } from 'express';
 import { verifyToken } from '../utils/token-manager.js';
+import { chatValidator, validate } from '../utils/validators.js';
+import { deleteChats, generateChatCompletion, sendChatsToUser } from '../controllers/chatController.js';
 // Protected API
 const chatRouter = Router();
-chatRouter.post("/new-chat", (req, res, next) => {
-    verifyToken(req, res, next).catch(next);
-});
+/*---------------------------Routes---------------------------*/
+// Generate chat completion
+chatRouter.post("/new-chat", validate(chatValidator), verifyToken, generateChatCompletion);
+// Send chats to user
+chatRouter.get("/all-chats", verifyToken, sendChatsToUser);
+// Delete chats
+chatRouter.delete("/delete-chats", verifyToken, deleteChats);
 export default chatRouter;
 //# sourceMappingURL=chatRouter.js.map

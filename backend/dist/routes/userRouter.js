@@ -15,7 +15,7 @@ userRouter.post("/login", validate(loginValidator), (req, res, next) => {
     userLogin(req, res, next).catch(next);
 });
 userRouter.get("/auth-status", (req, res, next) => {
-    verifyToken(req, res, next).catch(next);
+    verifyToken(req, res, next);
 }, (req, res, next) => {
     verifyUser(req, res, next).catch(next);
 });

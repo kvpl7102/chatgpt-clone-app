@@ -20,7 +20,7 @@ const validate = (validations: ValidationChain[]) => {
         res.status(400).json({
             message: "Validation failed",
             errors: errors.array()
-        });
+        }); 
     };
 }
 

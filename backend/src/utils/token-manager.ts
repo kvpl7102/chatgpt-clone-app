@@ -23,26 +23,22 @@ export const createToken = (
     return token;
 };
 
-export const verifyToken = async (
+export const verifyToken = (
     req: Request,
     res: Response,
     next: NextFunction
-) => {
+): void => {
     const token = req.signedCookies[`${COOKIE_NAME}`];
     if (!token || token.trim() === "") {
-        return res.status(401).json({ message: "Token Not Received" });
+        res.status(401).json({ message: "Token Not Received" });
+        return;
     }
-
-    return new Promise<void>((resolve, reject) => {
-        return jwt.verify(token, process.env.JWT_SECRET, (err, success) => {
-            if (err) {
-                reject(err.message);
-                return res.status(401).json({ message: "Token Invalid" });
-            } else {
-                resolve();
-                res.locals.jwtData = success;
-                return next();
-            }
-        });
+    jwt.verify(token, process.env.JWT_SECRET, (err, success) => {
+        if (err) {
+            res.status(401).json({ message: "Token Invalid" });
+            return;
+        }
+        res.locals.jwtData = success;
+        next();
     });
 };
