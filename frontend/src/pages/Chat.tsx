@@ -3,8 +3,8 @@ import { useAuth } from "../context/AuthContext"
 import { red } from '@mui/material/colors'
 import {IoMdSend} from "react-icons/io"
 import ChatItem from "../components/chat/ChatItem";
-import React, { useEffect, useState, useRef } from "react";
-import { getUserChats, sendChatRequest } from "../helpers/api-communicator";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { deleteUserChats, getUserChats, sendChatRequest } from "../helpers/api-communicator";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -24,41 +24,44 @@ const Chat = () => {
       : nameParts[0].substring(0, 2)
     : "";
   
-  // const [chatMessages, setChatMessages] = useState<Message[]>([]);
-  const chatMessages: Message[] = [
-  {
-    role: "user",
-    content: "Hi there!"
-  },
-  {
-    role: "assistant",
-    content: "Hello! How can I help you today?"
-  },
-  {
-    role: "user",
-    content: "What’s the weather like in Montreal?"
-  },
-  {
-    role: "assistant",
-    content: "It’s currently sunny and around 25°C in Montreal."
-  },
-  {
-    role: "user",
-    content: "Nice! Any suggestions for outdoor activities?"
-  },
-  {
-    role: "assistant",
-    content: "Sure! You could go for a walk at Mount Royal or rent a bike along the Lachine Canal."
-  },
-  {
-    role: "user",
-    content: "That sounds great. Thanks!"
-  },
-  {
-    role: "assistant",
-    content: "You’re welcome! Have fun out there!"
-  }
-];
+  
+  const chatMessagesExample: Message[] = [
+    {
+      role: "user",
+      content: "Hi there!",
+    },
+    {
+      role: "assistant",
+      content: "Hello! How can I help you today?",
+    },
+    {
+      role: "user",
+      content: "What’s the weather like in Montreal?",
+    },
+    {
+      role: "assistant",
+      content: "It’s currently sunny and around 25°C in Montreal.",
+    },
+    {
+      role: "user",
+      content: "Nice! Any suggestions for outdoor activities?",
+    },
+    {
+      role: "assistant",
+      content:
+        "Sure! You could go for a walk at Mount Royal or rent a bike along the Lachine Canal.",
+    },
+    {
+      role: "user",
+      content: "That sounds great. Thanks!",
+    },
+    {
+      role: "assistant",
+      content: "You’re welcome! Have fun out there!",
+    },
+  ];
+
+  const [chatMessages, setChatMessages] = useState<Message[]>(chatMessagesExample);
 
   const handleSubmit = async () => {
     const content = inputRef.current?.value as string;
@@ -66,13 +69,44 @@ const Chat = () => {
       inputRef.current.value = "";
     }
     const newMessage: Message = { role: "user", content };
-    // setChatMessages((prev) => [...prev, newMessage]);
-    console.log(newMessage);
-    // const chatData = await sendChatRequest(content);
-    // setChatMessages([...chatData.chats]);
+    setChatMessages((prev) => [...prev, newMessage]);
+    const chatData = await sendChatRequest(content);
+    setChatMessages([...chatData.chats]);
     
   };
 
+  const handleDeleteChats = async () => {
+    try {
+      toast.loading("Deleting chats", { id: "deletechats" });
+      await deleteUserChats();
+      setChatMessages([]);
+      toast.success("Deleted chats successfully", { id: "deletechats" });
+    } catch (error) {
+      console.log(error);
+      toast.error("Deleting chats failed");
+    }
+  };
+  
+  useEffect(() => {
+    if (auth?.isLoggedIn && auth.user) {
+      toast.loading("Loading chats", { id: "loadchats" });
+      getUserChats()
+        .then((data) => {
+          setChatMessages([...data.chats]);
+          toast.success("Successfully loaded chats", { id: "loadchats" });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("Loading failed", { id: "loadchats" });
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!auth?.user) {
+      navigate("/login");
+    }
+  }, [auth, navigate]);
 
   return (
     <Box
@@ -123,6 +157,7 @@ const Chat = () => {
             You can chat about anything! But avoid sharing personal information.
           </Typography>
           <Button
+            onClick={handleDeleteChats}
             sx={{
               width: "200px",
               my: "auto",
@@ -220,6 +255,4 @@ const Chat = () => {
 
 export default Chat
 
-function useLayoutEffect(arg0: () => void, arg1: ({ isLoggedIn: boolean; user: { name: string; email: string; } | null; login: (email: string, password: string) => Promise<void>; signup: (name: string, email: string, password: string) => Promise<void>; logout: () => Promise<void>; } | null)[]) {
-  throw new Error("Function not implemented.");
-}
+

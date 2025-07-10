@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { getAllUsers, userLogin, userSignup } from '../controllers/userController.js';
+import { getAllUsers, userLogin, userLogout, userSignup } from '../controllers/userController.js';
 import { signupValidator, loginValidator, validate } from '../utils/validators.js';
 import { verifyToken } from '../utils/token-manager.js';
 import { verifyUser } from '../controllers/userController.js';
@@ -31,6 +31,21 @@ userRouter.post("/login", validate(loginValidator),
 	next: NextFunction
 ) => {
 	userLogin(req, res, next).catch(next);
+});
+
+userRouter.get("/logout",
+	(
+	req: Request, 
+	res: Response, 
+	next: NextFunction
+) => {
+	verifyToken(req, res, next);
+}, (
+	req: Request, 
+	res: Response, 
+	next: NextFunction
+) => {
+	userLogout(req, res, next);
 });
 
 userRouter.get("/auth-status",

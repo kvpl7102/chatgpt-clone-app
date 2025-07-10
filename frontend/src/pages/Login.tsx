@@ -3,9 +3,12 @@ import { Box, Typography, Button } from "@mui/material";
 import CustomInput from "../components/shared/CustomInput";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Login = () => {
   const auth = useAuth();
+  const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -21,6 +24,12 @@ const Login = () => {
     }
 
   }
+
+  useEffect(() => {
+    if (auth?.user) {
+      navigate("/chat");
+    }
+  }, [auth, navigate]);
   
   return (
     <Box 

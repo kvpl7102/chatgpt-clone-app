@@ -1,4 +1,4 @@
-import { Link, Links } from "react-router-dom"
+import { Link, } from "react-router-dom"
 
 type Props = {
     to: string;
@@ -11,6 +11,7 @@ type Props = {
 const NavLink = (props: Props) => {
   return (
     <Link 
+    onClick={props.onClick}
     className="nav-link"
     to={props.to}
     style={{

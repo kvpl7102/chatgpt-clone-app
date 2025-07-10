@@ -49,6 +49,7 @@ export const sendChatsToUser = async (req, res, next) => {
             res.status(401).send("Permissions didn't match");
             return;
         }
+        res.setHeader('Cache-Control', 'no-cache');
         res.status(200).json({ message: "Chats sent to user!", chats: user.chats });
     }
     catch (error) {
