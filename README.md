@@ -1,5 +1,6 @@
 # Full-Stack ChatGPT Clone
 
+![Homepage Demo](./demo/homePage.gif)
 ## Overview
 
 This project is a full-stack clone of the popular AI chatbot, ChatGPT. It is built with a modern tech stack, featuring a React frontend and a Node.js/Express backend. The application allows users to sign up, log in, and engage in conversations with an AI powered by the OpenAI API.
