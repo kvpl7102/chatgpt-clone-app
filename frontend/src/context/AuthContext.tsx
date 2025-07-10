@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { checkAuthStatus, loginUser } from "../helpers/api-communicator";
+import { createContext, useContext, useEffect, useState, type ReactNode, useMemo } from "react";
+import { checkAuthStatus, loginUser, logoutUser, signupUser } from "../helpers/api-communicator";
+import { azAZ } from "@mui/material/locale";
 
 type User = {
     name: string;
@@ -30,9 +31,9 @@ export const AuthProvider = ({children} : {children: ReactNode}) => {
             if (data) {
                 setUser({ name: data.name, email: data.email  });
                 setIsLoggedIn(true);
-            } 
+            }
         }
-        checkStatus(); 
+        checkStatus();
     }, []);
     const login = async(email: string, password: string) => {
         const data = await loginUser(email, password);
@@ -41,16 +42,30 @@ export const AuthProvider = ({children} : {children: ReactNode}) => {
             setIsLoggedIn(true);
         }
     };
-    const signup = async(name: string, email: string, password: string) => {};
-    const logout = async() => {};
-
-    const value = {
-        user,
-        isLoggedIn,
-        login,
-        signup,
-        logout
+    const signup = async(name: string, email: string, password: string) => {
+        const data = await signupUser(name, email, password);
+        if (data) {
+            setUser({name: data.name, email: data.email});
+            setIsLoggedIn(true);
+        }
     };
+    const logout = async() => {
+        await logoutUser();
+        setIsLoggedIn(false);
+        setUser(null);
+        window.location.reload();
+    };
+
+    const value = useMemo(
+        () => ({
+          user,
+          isLoggedIn,
+          login,
+          signup,
+          logout,
+        }),
+        [user, isLoggedIn]
+      );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 };
