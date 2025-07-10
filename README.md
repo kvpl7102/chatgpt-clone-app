@@ -64,11 +64,18 @@ Follow these instructions to get the project up and running on your local machin
     ```
 
 3.  **Set up environment variables:**
-    Create a `.env` file in the `backend` directory and add the following variables:
+    Copy the `.env.example` file to a new file named `.env`:
+    ```bash
+    cp .env.example .env
     ```
+    Then, open the `.env` file and fill in the required values for the following variables:
+    ```
+    PORT=<your_port_number>
+    COOKIE_SECRET=<your_cookie_secret>
     MONGODB_URL=<your_mongodb_connection_string>
     JWT_SECRET=<your_jwt_secret>
     OPENAI_API_KEY=<your_openai_api_key>
+    OPENAI_ORGANIZATION_ID=<your_openai_organization_id>
     ```
 
 4.  **Run the development server:**
