@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext"
 import { red } from '@mui/material/colors'
 import {IoMdSend} from "react-icons/io"
 import ChatItem from "../components/chat/ChatItem";
-import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { deleteUserChats, getUserChats, sendChatRequest } from "../helpers/api-communicator";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -154,7 +154,7 @@ const Chat = () => {
             You are talking to a ChatBot
           </Typography>
           <Typography sx={{ mx: "auto", fontFamily: "work sans", my: 4, p: 3 }}>
-            You can chat about anything! But avoid sharing personal information.
+            You can chat about anything. But avoid sharing personal information.
           </Typography>
           <Button
             onClick={handleDeleteChats}
@@ -219,7 +219,6 @@ const Chat = () => {
         <div
           style={{
             width: "100%",
-            padding: "20px",
             borderRadius: 8,
             backgroundColor: "rgb(17, 27, 39)",
             display: "flex",
@@ -233,7 +232,7 @@ const Chat = () => {
             style={{
               width: "100%",
               outline: "none",
-              padding: "10px",
+              padding: "20px",
               fontSize: "20px",
               marginTop: "20px",
               backgroundColor: "transparent",
@@ -243,7 +242,7 @@ const Chat = () => {
           />
           <IconButton
             onClick={handleSubmit}
-            sx={{ ml: "auto", color: "white", ":hover": { color: "gray" } }}
+            sx={{ ml: "auto", color: "white", ":hover": { color: "gray" }, mx: 1 }}
           >
             <IoMdSend />
           </IconButton>
